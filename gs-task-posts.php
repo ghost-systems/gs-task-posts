@@ -68,13 +68,17 @@ function addTaskDetails() {
 	add_meta_box('task-details', 'Task Details', 'renderTaskDetailsBox', 'gs_task', 'side', 'high');
 }
 
-function renderTaskDetailsBox($object, $box) { ?>
+
+function renderTaskDetailsBox($object, $box) {
+?>
 	<div>
 		<label for="gs-start-time">Start Time</label>
-		<input id="gs-start-time" type="text" name="gs-start-time" value="<?php echo wp_specialchars(get_post_meta($object->ID, 'Start Time', true), 1); ?>"/>
-		<input type="hidden" name="gs-tasks-nonce" value="<?php echo wp_create_nonce(plugin_basename(__FILE__)); ?>" />
+		<input id="gs-start-time" type="datetime-local" name="gs-start-time" value="<?php echo wp_specialchars(get_post_meta($object->ID, 'Start Time', true), 1); ?>"/>
 	</div>
-<?php }
+	<input type="hidden" name="gs-tasks-nonce" value="<?php echo wp_create_nonce(plugin_basename(__FILE__)); ?>" />
+<?php 
+}
+
 
 function saveTaskDetails($post_id, $post) {
 
@@ -86,15 +90,15 @@ function saveTaskDetails($post_id, $post) {
 		return $post_id;
 	}
 
-	$meta_value = get_post_meta($post_id, 'Start Time', true );
-	$new_meta_value = stripslashes( $_POST['gs-start-time'] );
+	$meta_value = get_post_meta($post_id, 'Start Time', true);
+	$new_meta_value = stripslashes($_POST['gs-start-time']);
 
 	if ($new_meta_value && ('' == $meta_value)) {
-		add_post_meta( $post_id, 'Start Time', $new_meta_value, true );
+		add_post_meta($post_id, 'Start Time', $new_meta_value, true);
 	} elseif ($new_meta_value != $meta_value) {
-		update_post_meta( $post_id, 'Start Time', $new_meta_value );
+		update_post_meta($post_id, 'Start Time', $new_meta_value);
 	} elseif (('' == $new_meta_value) && $meta_value) {
-		delete_post_meta( $post_id, 'Start Time', $meta_value );
+		delete_post_meta($post_id, 'Start Time', $meta_value);
 	}
 }
 
